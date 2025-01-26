@@ -1,0 +1,24 @@
+
+  <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+      <title>My Personal Webstie</title>
+      <link>https://tailwind-nextjs-starter-blog.vercel.app/blog</link>
+      <description>A blog created with Next.js and Tailwind.css</description>
+      <language>en-us</language>
+      <managingEditor>fodorzsolt92@gmail.ocm (Fodor Zsolt)</managingEditor>
+      <webMaster>fodorzsolt92@gmail.ocm (Fodor Zsolt)</webMaster>
+      <lastBuildDate>Sun, 01 Dec 2024 00:00:00 GMT</lastBuildDate>
+      <atom:link href="https://tailwind-nextjs-starter-blog.vercel.app/tags/iot/feed.xml" rel="self" type="application/rss+xml"/>
+      
+  <item>
+    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/first-steps-with-node-mcu</guid>
+    <title>First steps with Node MCU</title>
+    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/first-steps-with-node-mcu</link>
+    <description>My first steps with NodeMCU programming involved setting up the environment, writing my first code, and exploring the ESP8266 potential for IoT projects.</description>
+    <pubDate>Sun, 01 Dec 2024 00:00:00 GMT</pubDate>
+    <author>fodorzsolt92@gmail.ocm (Fodor Zsolt)</author>
+    <category>iot</category><category>programming</category>
+  </item>
+
+    </channel>
+  </rss>
