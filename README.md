@@ -1,1 +1,0 @@
-# fodorzsolt.is-a.dev
