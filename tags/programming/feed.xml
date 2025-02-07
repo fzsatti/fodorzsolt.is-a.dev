@@ -21,6 +21,16 @@
   </item>
 
   <item>
+    <guid>https://fodorzsolt.is-a.dev/blog/export-php-request-to-curl</guid>
+    <title>Export PHP Request to cURL command</title>
+    <link>https://fodorzsolt.is-a.dev/blog/export-php-request-to-curl</link>
+    <description>A way to export an incoming request to cURL bash command</description>
+    <pubDate>Fri, 07 Feb 2025 00:00:00 GMT</pubDate>
+    <author>fodorzsolt92@gmail.ocm (Fodor Zsolt)</author>
+    <category>programming</category><category>php</category>
+  </item>
+
+  <item>
     <guid>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</guid>
     <title>How I added docker to my blog</title>
     <link>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</link>

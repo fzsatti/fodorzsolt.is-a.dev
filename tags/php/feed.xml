@@ -8,7 +8,7 @@
       <managingEditor>fodorzsolt92@gmail.ocm (Fodor Zsolt)</managingEditor>
       <webMaster>fodorzsolt92@gmail.ocm (Fodor Zsolt)</webMaster>
       <lastBuildDate>Fri, 07 Feb 2025 00:00:00 GMT</lastBuildDate>
-      <atom:link href="https://fodorzsolt.is-a.dev/feed.xml" rel="self" type="application/rss+xml"/>
+      <atom:link href="https://fodorzsolt.is-a.dev/tags/php/feed.xml" rel="self" type="application/rss+xml"/>
       
   <item>
     <guid>https://fodorzsolt.is-a.dev/blog/export-php-request-to-curl</guid>
@@ -18,16 +18,6 @@
     <pubDate>Fri, 07 Feb 2025 00:00:00 GMT</pubDate>
     <author>fodorzsolt92@gmail.ocm (Fodor Zsolt)</author>
     <category>programming</category><category>php</category>
-  </item>
-
-  <item>
-    <guid>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</guid>
-    <title>How I added docker to my blog</title>
-    <link>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</link>
-    <description>How I created the docker configuration for the blog project</description>
-    <pubDate>Sun, 26 Jan 2025 00:00:00 GMT</pubDate>
-    <author>fodorzsolt92@gmail.ocm (Fodor Zsolt)</author>
-    <category>programming</category><category>docker</category>
   </item>
 
     </channel>
