@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://tailwind-nextjs-starter-blog.vercel.app/</loc>
+<loc>https://fodorzsolt.is-a.dev/</loc>
 <lastmod>2025-02-07</lastmod>
 </url>
 <url>
-<loc>https://tailwind-nextjs-starter-blog.vercel.app/blog</loc>
+<loc>https://fodorzsolt.is-a.dev/blog</loc>
 <lastmod>2025-02-07</lastmod>
 </url>
 <url>
-<loc>https://tailwind-nextjs-starter-blog.vercel.app/projects</loc>
+<loc>https://fodorzsolt.is-a.dev/projects</loc>
 <lastmod>2025-02-07</lastmod>
 </url>
 <url>
-<loc>https://tailwind-nextjs-starter-blog.vercel.app/tags</loc>
+<loc>https://fodorzsolt.is-a.dev/tags</loc>
 <lastmod>2025-02-07</lastmod>
 </url>
 <url>
-<loc>https://tailwind-nextjs-starter-blog.vercel.app/blog/how-i-added-docker-to-my-blog</loc>
+<loc>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</loc>
 <lastmod>2025-01-26T00:00:00.000Z</lastmod>
 </url>
 </urlset>

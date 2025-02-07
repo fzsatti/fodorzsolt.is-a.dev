@@ -2,18 +2,18 @@
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>My Personal Webstie</title>
-      <link>https://tailwind-nextjs-starter-blog.vercel.app/blog</link>
+      <link>https://fodorzsolt.is-a.dev/blog</link>
       <description>A blog about my journeys</description>
       <language>en-us</language>
       <managingEditor>fodorzsolt92@gmail.ocm (Fodor Zsolt)</managingEditor>
       <webMaster>fodorzsolt92@gmail.ocm (Fodor Zsolt)</webMaster>
       <lastBuildDate>Sun, 26 Jan 2025 00:00:00 GMT</lastBuildDate>
-      <atom:link href="https://tailwind-nextjs-starter-blog.vercel.app/feed.xml" rel="self" type="application/rss+xml"/>
+      <atom:link href="https://fodorzsolt.is-a.dev/feed.xml" rel="self" type="application/rss+xml"/>
       
   <item>
-    <guid>https://tailwind-nextjs-starter-blog.vercel.app/blog/how-i-added-docker-to-my-blog</guid>
+    <guid>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</guid>
     <title>How I added docker to my blog</title>
-    <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/how-i-added-docker-to-my-blog</link>
+    <link>https://fodorzsolt.is-a.dev/blog/how-i-added-docker-to-my-blog</link>
     <description>How I created the docker configuration for the blog project</description>
     <pubDate>Sun, 26 Jan 2025 00:00:00 GMT</pubDate>
     <author>fodorzsolt92@gmail.ocm (Fodor Zsolt)</author>
