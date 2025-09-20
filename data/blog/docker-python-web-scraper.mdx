@@ -1,0 +1,25 @@
+---
+title: 'How to create a web scraper using Docker, Python and MySQL'
+date: '2025-01-19'
+lastmod: 2025-12-19'
+tags: ['programming', 'python', 'docker']
+draft: true
+summary: 'Step-by-step tutorial for creating a docker image for a Scrappy web scraper, which saves the data to a MySql database.'
+images: ['/static/images/docker-python-web-scraper/dpy-wbscr-cover.jpg']
+---
+
+## The problem
+I want to buy a motorcycle, and there is a website which has a lot of motorcycles for sale. The problem is that it does not have the filters I want, so I will get the data I need, and copy it to a mysql database, which I can query later, to get the motorcycle I want.
+
+## Set up the project
+First I need to install PyCharm, community edition. This is the best python editor I worked with. If you already have your favourite editor installed, you can skip this step.
+
+I am using Ubuntu, so I go to https://snapcraft.io/, and search for PyCharm. There I click on the community edition, and on the detail page, if I click Install, the following command appears, which I need to run:
+```sudo snap install pycharm-community --classic```
+
+I create an empty folder somewhere, then open PyCharm, click Open Project, and open my folder there.
+
+## Setting up docker
+Crate a `docker-compose.yml` file.
+
+

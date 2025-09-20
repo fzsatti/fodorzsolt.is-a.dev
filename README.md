@@ -1,0 +1,1 @@
+Thanks to https://github.com/timlrx/tailwind-nextjs-starter-blog for the template

@@ -1,0 +1,109 @@
+---
+title: 'How I added docker to my blog'
+date: '2025-01-26'
+lastmod: 2025-01-26'
+tags: ['programming', 'docker']
+draft: false
+summary: 'How I created the docker configuration for the blog project'
+---
+
+## My Blog
+I wanted to create a blog, but I am not that good on designing websites, so I looked for a template, and I found this awesome one: https://github.com/timlrx/tailwind-nextjs-starter-blog.
+
+I decided to use it, but I did not wanted to bother with installing `npm` and `yarn` to my system, so I opted for the Docker solution.
+
+## The Dockerfile
+First of all we need a Dockerfile, so let`s create one.
+```
+# Use the official Node.js image as the base image
+FROM node:22.13.1
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Set yarn version
+RUN npm uninstall -g yarn
+RUN corepack enable
+RUN yarn set version 3.6.4
+
+# Expose the port the app runs on (adjust if needed)
+EXPOSE 3000
+```
+
+It is a very simple one, basically I start from an official NPM image and install `yarn`
+
+## Lets use docker-compose
+I like using `docker-compose`, so let's create a `docker-compose.yaml` file.
+
+```
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    command: ["yarn", "dev"]
+    environment:
+      NODE_ENV: development
+
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "yarn", "build" ]
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    environment:
+      NODE_ENV: production
+      EXPORT: export
+
+  install:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "yarn", "install" ]
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+```
+
+There are 3 services declared:
+* app -> this is for development
+* build -> this is for creating the html for the website
+* install -> this needs to be run once, to create the `node_modules` directory
+
+## How to use
+To make it easy lets create a `Makefile`. If you dont have `make` installed, do it with `sudo apt-get -y install make`
+In the `Makefile` add the following:
+```
+dev:
+	docker-compose up app
+stop:
+	docker-compose down
+bash:
+	docker-compose exec app bash
+build:
+	docker-compose run build
+install:
+	docker-compose run install
+```
+
+### Installing
+Simply run `make install`. This will create the `node_modules` folder in the project directory
+
+### Development
+Just run `make dev`. Then if all goes well if you access `localhost:3000`, the app should appear. Hot reload also works.
+If something needs to be installed, then you get a terminal inside the container by running `make bash`.
+When done, just run `make stop` to stop the container.
+
+### Building
+Run `make build`. After it finished there should be an `out` directory in the project folder.
+
+## Conclusion
+This is how to run this amazing blog template using Docker.
+

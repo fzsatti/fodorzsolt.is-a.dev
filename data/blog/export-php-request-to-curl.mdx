@@ -1,0 +1,55 @@
+---
+title: 'Export PHP Request to cURL command'
+date: '2025-02-07'
+lastmod: 2025-02-07'
+tags: ['programming', 'php']
+draft: false
+summary: 'A way to export an incoming request to cURL bash command'
+---
+
+## The problem
+There is an endpoint which needs to be accessed multiple times in a row, but it is pretty hard to do from browser, or it is accessed by a webhook with some very specific parameters.
+
+With this method you can get the incoming request and turn into a cURL command, which can be modified and executed from bash any time you want.
+
+## The solution
+Declare the following function where you want to use it:
+```
+function buildCurlCommand() {
+        // Base command
+        $curlCommand = 'curl -X ' . $_SERVER['REQUEST_METHOD'];
+
+        // Add headers
+        foreach (getallheaders() as $key => $value) {
+            $curlCommand .= " -H '" . $key . ": " . $value . "'";
+        }
+
+        // Add POST/PUT data
+        if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH'])) {
+            $input = file_get_contents('php://input');
+            if (!empty($input)) {
+                $curlCommand .= " --data '" . addslashes($input) . "'";
+            }
+        }
+
+        // Add query parameters (if any)
+        $queryString = $_SERVER['QUERY_STRING'];
+        $url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        if (!empty($queryString)) {
+            $url = strtok($url, '?');
+            $url .= '?' . $queryString;
+        }
+
+        // Append the URL to the command
+        $curlCommand .= " '" . $url . "'";
+
+        return $curlCommand;
+    }
+```
+
+Write its response to a file, from where you can put it into bash:
+
+```
+file_put_contents('/var/www/html/var/logs/incoming_curl.log', date('Y-m-d H:i:s').': '.$this->buildCurlCommand().PHP_EOL, FILE_APPEND);
+```
+
