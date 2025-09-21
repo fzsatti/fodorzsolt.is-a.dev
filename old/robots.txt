@@ -1,5 +1,0 @@
-User-Agent: *
-Allow: /
-
-Host: https://fodorzsolt.is-a.dev
-Sitemap: https://fodorzsolt.is-a.dev/sitemap.xml
