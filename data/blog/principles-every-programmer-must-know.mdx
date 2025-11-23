@@ -50,7 +50,7 @@ This class tried to do everything, it has the logic for order creation, it has t
 
 If you have 10 classes like this, and you need to modify how to send an email, then it will become a mess. 
 
-Also if you somebody is working to change the mail sending, somebody is working on adjust the creational parameters, they both need to modify tha same class, and this will result in conflits, and place for bugs and errors to happen.
+Also if you somebody is working to change the mail sending, somebody is working on adjust the creational parameters, they both need to modify tha same class, and this will result in conflicts, and place for bugs and errors to happen.
 
 Lets see how it could be done better:
 ```
@@ -76,7 +76,7 @@ class EmailService {
 
 Here each class has its job. The factory creates the order and thats all, it does not know about the email, or how it is stored in he DB.
 
-This is mainly the Single responsibility priciple.
+This is mainly the Single responsibility principle.
 
 ## Open-closed principle
 
@@ -122,7 +122,7 @@ class PaymentService {
 }
 ```
 
-Here each payment method has its own class. If you want to change one, only one calss needs to be modified. If you want to add a new one, a new class can be created, no exissing payment method needs to be modified.
+Here each payment method has its own class. If you want to change one, only one class needs to be modified. If you want to add a new one, a new class can be created, no existing payment method needs to be modified.
 
 ## Liskov substitution principle
 
@@ -170,7 +170,7 @@ class Penguin implements Bird {
 
 ```
 
-So by default Bird does not expects any bird to fly. There is the FlyingBird for that, so where the fly should be used, can enforce the FlyingBird interface insted of Bird.
+So by default Bird does not expects any bird to fly. There is the FlyingBird for that, so where the fly should be used, can enforce the FlyingBird interface instead of Bird.
 
 ## Interface segregation principle
 
@@ -219,7 +219,7 @@ class Robot implements Workable {
 
 So the big interface is split into smaller ones, and this way Robot is not forced to eat.
 
-## Dependency inversion priciple
+## Dependency inversion principle
 
 The Dependency Inversion Principle says:
 1. High-level modules should not depend on low-level modules. Both should depend on abstractions (interfaces)
@@ -284,7 +284,7 @@ class UserService {
 
 ```
 
-Here the database service is injected into the UserService, user service does not need to handle which database are you using, just knows that that is there has a save funtion and that stores the data, nont need to worry about low level stuff like how to save, and how to choose db type.
+Here the database service is injected into the UserService, user service does not need to handle which database are you using, just knows that that is there has a save function and that stores the data, dont need to worry about low level stuff like how to save, and how to choose db type.
 
 This is what Dependency inversion is about, UserService which is a high level class, depends on an interface instead of a concrete low level class.
 
@@ -361,7 +361,7 @@ class User {
 
 If later truly required the extra function, will add them later.
 
-# Sepration of concerns
+# Separation of concerns
 Separation of Concerns (SoC) is a software design principle that says: **A program should be divided into distinct sections, each responsible for a single, well-defined concern.**
 
 A concern is simply a part of the program’s functionality: like data access, business rules, presentation, logging, configuration, etc.
