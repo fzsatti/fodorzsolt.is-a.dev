@@ -1,0 +1,626 @@
+---
+title: 'Principles and concepts every programmer must know'
+date: '2025-11-15'
+lastmod: 2025-11-15'
+tags: ['programming', 'general-knowledge']
+draft: false
+summary: 'Great software begins with a set of timeless principles, not clever tricks. This article lays out the core concepts—SOLID, DRY, KISS, separation of concerns, consistency models, immutability, idempotency, and testing approaches—that make code robust, maintainable, and easy to evolve.'
+---
+
+Software engineering is as much about disciplined thinking as it is about writing code. Over time, successful teams settle on a small number of principles that guide design, testing, and collaboration. These principles aren’t flashy patterns to memorize; they’re practical heuristics that help you avoid accidental complexity, reduce bugs, and make systems easier to change and reason about.
+
+In this article I collect and explain the essential principles every programmer should know, so lets dive in.
+
+# SOLID Principles
+SOLID is an acronym for the first five object oriented design principles from Robert C. Martin (Uncle Bob). It stands for:
+
+**S** - Single responsibility
+
+**O** - Open-closed
+
+**L** - Liskov substitution
+
+**I** - Interface segregation
+
+**D** - Dependency inversion
+
+## Single responsibility principle
+
+The single-responsibility principle states that there should never be more than one reason for a class to change. In other words, every class should have only one job.
+
+Lets see an example:
+```
+class OrderService {
+    public function createOrder($data) {
+        // create order logic
+    }
+
+    public function saveToDatabase($order) {
+        // DB logic
+    }
+
+    public function sendEmailConfirmation($order) {
+        // email logic
+    }
+}
+
+```
+
+This class tried to do everything, it has the logic for order creation, it has the login for saving to database, for sending email. It is too much. 
+
+If you have 10 classes like this, and you need to modify how to send an email, then it will become a mess. 
+
+Also if you somebody is working to change the mail sending, somebody is working on adjust the creational parameters, they both need to modify tha same class, and this will result in conflits, and place for bugs and errors to happen.
+
+Lets see how it could be done better:
+```
+class OrderFactory {
+    public function createOrder($data) {
+        return new Order($data);
+    }
+}
+
+class OrderRepository {
+    public function save($order) {
+        // DB logic
+    }
+}
+
+class EmailService {
+    public function sendOrderConfirmation($order) {
+        // email logic
+    }
+}
+
+```
+
+Here each class has its job. The factory creates the order and thats all, it does not know about the email, or how it is stored in he DB.
+
+This is mainly the Single responsibility priciple.
+
+## Open-closed principle
+
+The open–closed principle states that software entities should be open for extension, but closed for modification.
+
+Lets see and example:
+```
+class PaymentService {
+    public function pay($type) {
+        if ($type === 'card') {
+            // card logic
+        } elseif ($type === 'paypal') {
+            // paypal logic
+        }
+        // For every new method → you must edit the class
+    }
+}
+```
+The problem here is that if you want to add a new payment method, you need to edit the class.
+
+A better alternative would be:
+```
+interface PaymentMethod {
+    public function pay();
+}
+
+class CardPayment implements PaymentMethod {
+    public function pay() {
+        // card logic
+    }
+}
+
+class PaypalPayment implements PaymentMethod {
+    public function pay() {
+        // paypal logic
+    }
+}
+
+class PaymentService {
+    public function process(PaymentMethod $method) {
+        $method->pay();
+    }
+}
+```
+
+Here each payment method has its own class. If you want to change one, only one calss needs to be modified. If you want to add a new one, a new class can be created, no exissing payment method needs to be modified.
+
+## Liskov substitution principle
+
+The Liskov substitution principle states that a subclass must be usable everywhere its parent class is expected, without breaking behavior.
+In other words:
+"If B extends A, then B should not change A’s expected behavior."
+
+A child class must not remove features, not add restrictions, and not break the logic the parent guarantees.
+
+Lets understand better with an example.
+```
+class Bird {
+    public function fly() {
+        return "Flying!";
+    }
+}
+
+class Penguin extends Bird {
+    public function fly() {
+        throw new Exception("Penguins can't fly!");
+    }
+}
+```
+
+What we have here is a Bird class which expects every bird to fly, but Penguins dont fly, so where Penguin is used instead of Bird, it results in an error.
+
+This is how it should look like to be better:
+
+```
+interface Bird {}
+
+interface FlyingBird extends Bird {
+    public function fly();
+}
+
+class Sparrow implements FlyingBird {
+    public function fly() {
+        return "Flying!";
+    }
+}
+
+class Penguin implements Bird {
+    // Penguin does not have fly() → no broken expectations
+}
+
+```
+
+So by default Bird does not expects any bird to fly. There is the FlyingBird for that, so where the fly should be used, can enforce the FlyingBird interface insted of Bird.
+
+## Interface segregation principle
+
+The Interface segregation principle states that clients should not be forced to depend on methods they do not use. In other words instead of one large interface, create multiple small, specific interfaces.
+
+Lets see an example for bad code:
+```
+interface Worker {
+    public function work();
+    public function eat();
+}
+
+class Robot implements Worker {
+    public function work() {
+        echo "Robot working";
+    }
+
+    public function eat() {
+        // Robots don't eat!
+        throw new Exception("Robots can't eat");
+    }
+}
+```
+
+So in this example there os the Worker interface, which forces to implement work and eat functions. This is valid for human workers, but for robots it is not, because then dont eat.
+
+Lets see how it can be done correctly:
+```
+interface Workable {
+    public function work();
+}
+
+interface Eatable {
+    public function eat();
+}
+
+class Human implements Workable, Eatable {
+    public function work() { echo "Human working"; }
+    public function eat()  { echo "Human eating"; }
+}
+
+class Robot implements Workable {
+    public function work() { echo "Robot working"; }
+}
+``` 
+
+So the big interface is split into smaller ones, and this way Robot is not forced to eat.
+
+## Dependency inversion priciple
+
+The Dependency Inversion Principle says:
+1. High-level modules should not depend on low-level modules. Both should depend on abstractions (interfaces)
+2. Abstractions should not depend on details. Details should depend on abstractions
+
+Your business logic should depend on interfaces, not concrete classes. This makes your code easier to change, test, and extend.
+
+Lets see an example:
+```
+class MySQLDatabase {
+    public function save($data) {
+        // save to MySQL
+    }
+}
+
+class UserService {
+    private $db;
+
+    public function __construct() {
+        $this->db = new MySQLDatabase(); // BAD: tight coupling
+    }
+
+    public function storeUser($data) {
+        $this->db->save($data);
+    }
+}
+
+```
+
+The problems with this are that if you want to change from MySQL to PostgreSQL you cannot do it without modification of the User UserService, and imagine if you have hundreds of services.
+Another issue is you cannot UserService, which is a high level module, depends on a low level module, which says how should you store data in db.
+
+Lets see how to improve this:
+```
+interface Database {
+    public function save($data);
+}
+
+class MySQLDatabase implements Database {
+    public function save($data) {
+        // MySQL logic
+    }
+}
+
+class PotgreDatabase implements Database {
+    public function save($data) {
+        // Postgre logic
+    }
+}
+
+class UserService {
+    private Database $db;
+
+    public function __construct(Database $db) {
+        $this->db = $db; // injected dependency
+    }
+
+    public function storeUser($data) {
+        $this->db->save($data);
+    }
+}
+
+```
+
+Here the database service is injected into the UserService, user service does not need to handle which database are you using, just knows that that is there has a save funtion and that stores the data, nont need to worry about low level stuff like how to save, and how to choose db type.
+
+This is what Dependency inversion is about, UserService which is a high level class, depends on an interface instead of a concrete low level class.
+
+# KISS
+
+KISS stands for **Keep It Simple, Stupid.**
+
+It means:
+- Prefer simple, easy-to-understand solutions
+- Avoid unnecessary complexity
+- Don’t over-engineer
+- Easy code > clever code
+
+Good code should be simple to read, simple to test, simple to maintain. If something can be done in a simple way, do it.
+
+Lets see in action with a simple example
+```
+function isEven($number) {
+    if (($number / 2) === floor($number / 2)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+```
+
+As you can see it is big, complex, and hard to read and understand. Here is is a simpler way:
+```
+function isEven($number) {
+    return $number % 2 === 0;
+}
+```
+
+# YAGNI
+YAGNI stands for **You Aren’t Gonna Need It.**
+
+It means: Do not add features, functions, or code until they are actually needed.
+
+No “maybe in the future”, no “just in case”. Why?
+- Avoids wasted time
+- Keeps code simple
+- Prevents unused complexity
+- Makes maintenance easier
+
+YAGNI is about focusing only on what the user/project needs right now.
+
+Here is an example about how not to do:
+```
+class User {
+    public function getDiscount() {
+        // maybe later we need different discount types...
+        return 0;
+    }
+
+    public function setMembershipLevel($level) {
+        // not used anywhere yet
+    }
+
+    public function calculateLoyaltyPoints() {
+        // not implemented but reserved for future features
+    }
+}
+```
+It adds a lot of code which are not needed, adds extra complexity and confusion.
+
+Here is a better example:
+```
+class User {
+    public function getDiscount() {
+        return 0;
+    }
+}
+```
+
+If later truly required the extra function, will add them later.
+
+# Sepration of concerns
+Separation of Concerns (SoC) is a software design principle that says: **A program should be divided into distinct sections, each responsible for a single, well-defined concern.**
+
+A concern is simply a part of the program’s functionality: like data access, business rules, presentation, logging, configuration, etc.
+By separating these, your code becomes easier to maintain, test and extend.
+
+So instead of putting everything in one big file, you separate responsibilities:
+- Controller: handles the request
+- Service: contains business logic
+- Repository: communicates with the database
+- View: outputs HTML or JSON
+
+For example here is a code which does not respect the SOC:
+```
+function sendEmail($to, $message) {
+    // Validate email
+    if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("Invalid email!");
+    }
+
+    // Format message
+    $msg = strtoupper($message);
+
+    // Log
+    file_put_contents('log.txt', "[" . date('Y-m-d') . "] sent\n", FILE_APPEND);
+
+    // Send mail
+    mail($to, "Notice", $msg);
+}
+
+```
+
+This is how should it look like instead:
+```
+class EmailValidator {
+    public function validate(string $email): void {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException("Invalid email format");
+        }
+    }
+}
+
+class EmailFormatter {
+    public function formatMessage(string $msg): string {
+        return strtoupper($msg);
+    }
+}
+
+class Logger {
+    public function info(string $message): void {
+        file_put_contents('log.txt', $message . PHP_EOL, FILE_APPEND);
+    }
+}
+
+class EmailSender {
+    public function send(string $to, string $message): void {
+        mail($to, "Notice", $message);
+    }
+}
+
+class EmailService {
+    public function __construct(
+        private EmailValidator $validator,
+        private EmailFormatter $formatter,
+        private Logger $logger,
+        private EmailSender $sender
+    ) {}
+
+    public function process(string $to, string $msg): void {
+        $this->validator->validate($to);
+        $formatted = $this->formatter->formatMessage($msg);
+        $this->logger->info("Email sent to $to");
+        $this->sender->send($to, $formatted);
+    }
+}
+```
+
+# ACID vs BASE
+**ACID** is used mostly in traditional SQL / relational databases like MySQL, PostgreSQL, Oracle, SQL Server. ACID stands for:
+
+**A** – Atomicity:
+- Each transaction is all or nothing.
+- If one step fails, the whole transaction is rolled back.
+
+**C** – Consistency:
+- Database always moves from one valid state to another.
+- No broken constraints, no partial updates.
+
+**I** – Isolation:
+- Transactions don’t interfere with each other.
+- Act like they run one by one, even if they run in parallel.
+
+**D** – Durability:
+- Once a transaction is saved, it will not be lost, even if power fails or server crashes.
+
+**BASE** is used mostly in NoSQL databases like Cassandra, DynamoDB, MongoDB (partially), CouchDB. BASE stands for:
+
+**BA** – Basically Available:
+- The system aims to stay available, even during failures or network partitions.
+
+**S** – Soft State:
+- Data may change over time without new writes (due to replication, eventual sync).
+
+**E** – Eventually Consistent:
+- All replicas will eventually have the same data, but not instantly.
+
+
+# CAP Theorem
+The CAP theorem says that in a distributed system, you can only guarantee two out of the three:
+- **C** – Consistency
+- **A** – Availability
+- **P** – Partition Tolerance
+
+You must choose between CA, CP, or AP — but not all three at the same time.
+
+### Consistency (C)
+
+All nodes see the same data at the same time.
+After you write something, every read gets the newest value.
+
+Example:
+Write X=5 → you ALWAYS read X=5 on every server.
+
+### Availability (A)
+
+Every request gets a response, even if some nodes are down.
+The system never refuses the request.
+
+Example:
+Even if one node is down, the API still returns something.
+
+### Partition Tolerance (P)
+
+The system works even if the network between nodes fails (nodes can't communicate).
+
+Example:
+Server A cannot talk to Server B due to a network problem, but the app must still function.
+
+### The Three Possible Combinations
+**CP** – Consistency + Partition Tolerance:
+- Availability is sacrificed.
+- If nodes can’t talk to each other, the system refuses requests to keep data correct.
+- Use CP when correctness is more important than availability.
+
+**AP** – Availability + Partition Tolerance
+- Consistency is sacrificed.
+- Nodes continue serving data even if they can't sync, so you may get eventually consistent results.
+- Use AP when availability and speed matter more than perfect consistency.
+
+**CA** – Consistency + Availability (but no partition tolerance)
+- This cannot exist in a real distributed system because partitions always happen.
+- CA systems are basically single-node databases.
+- Example: A local SQL database running on one machine
+
+# Idempotency
+An idempotent operation is an action that can be performed multiple times but has the same effect as performing it once.
+No matter how many times you repeat the request, the result does not change.
+
+Simple examples:
+
+Idempotent: 
+- Setting a value -> PUT /user/1/name = "John" -> Running this 100 times still results in "John".
+- Deleting something -> DELETE /user/1 -> First time: deletes the user, Next times: still “deleted” → no change (same final state)
+
+Non-idempotent:
+- Increment -> POST /cart/add?product=1 -> Each call adds one more item, so results differ.
+- Creating a new record -> POST /orders -> Each call creates a new order, so repeating is dangerous.
+
+Idempotency matters because in real systems: network calls can fail, clients can retry, servers can time out, users can double-click a button, distributed systems may deliver the same message twice
+
+Without idempotency, retries can cause duplicate actions.
+
+# Immutability
+
+Immutability is a concept in programming and system design where data cannot be changed after it is created. Instead of modifying an existing value, you create a new value.
+- **Mutable** object: can be changed after creation
+- **Immutable** object: cannot be changed after creation
+
+In an immutable system, any “change” actually produces a new copy with modifications.
+
+# Testing types
+By Level (How deep the test goes)
+- **Unit Testing**: Tests one small piece of code (function/class). Goal: ensure logic works in isolation.
+- **Integration Testing**: Tests how multiple components work together.
+- **System Testing**: Tests the whole application as one system.
+- **End-to-End (E2E) Testing**: Simulates real user actions across the full stack. Example tools: Cypress, Playwright, Selenium.
+
+By Purpose
+- **Functional Testing**: Checks if the feature does what it should.
+- **Non-functional Testing**: Checks how well the system works. Includes:
+    - Performance testing
+    - Load testing
+    - Stress testing
+    - Security testing
+    - Usability testing
+    - Scalability testing
+
+By Automation
+- **Manual Testing**: Human tests the behavior step-by-step.
+- **Automated Testing**: Scripts test the behavior automatically.
+
+
+Design-Based Testing
+- **Black Box Testing**: Tester does NOT know internal code. They test inputs and outputs only.
+- **White Box Testing**: Tester knows internal code structure. Tests logic paths, conditions, branches.
+- **Gray Box Testing**: Tester knows a little about the internals.
+
+**Regression Testing**: Checks that a new change didn’t break existing features. Often automated.
+
+**Smoke Testing**: Quick test to see if the major system functions run. “Does the app start? Does login work?”
+
+**Sanity Testing**: Narrow test after a small change.
+
+**Acceptance Testing**: Tests if the system meets business requirements. Types:
+- UAT – User Acceptance Testing
+- SAT – System Acceptance Testing
+- Alpha/Beta Testing (pre-release testing)
+
+# TDD
+Test-Driven Development (TDD) is a development process where you:
+- Write a failing test first
+- Write just enough code to make the test pass
+- Refactor while keeping tests green
+
+This is known as the Red → Green → Refactor cycle.
+
+Example:
+
+### 1. RED — Write a failing test
+
+Write a test that describes the functionality you want.
+
+```
+public function test_sum() {
+    $calc = new Calculator();
+    $this->assertEquals(5, $calc->sum(2, 3));
+}
+```
+
+### 2. GREEN — Write minimal code to pass the test
+
+You only implement enough to make the test pass:
+```
+class Calculator {
+    public function sum($a, $b) {
+        return $a + $b;
+    }
+}
+```
+
+### 3. REFACTOR — Clean the code
+Improve: naming, structure, remove duplication, extract methods
+
+Make sure tests still pass.
+
+This step is the most important, because TDD gives you a safety net
+
+### Does TDD slow you down?
+At first: Yes. After some practice: No — it speeds you up, because:
+- fewer bugs
+- no debugging marathons
+- confidence to change code
+- faster feature development
